@@ -20,9 +20,17 @@ app.use('*', (req, res) => {
       return res.status(404).send('Index Not Found');
     }
 
-    return res.send(indexPath);
+    return res.sendFile(indexPath);
 
   });
 });
+
+app.use((err, req, res) => {
+  console.log(err);
+  res.status(500).json({
+    code: 500,
+    message: err.message,
+  })
+})
 
 app.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));
