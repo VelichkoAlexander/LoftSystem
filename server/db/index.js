@@ -1,7 +1,7 @@
-const User =  require('./schems/Users');
+const User = require('./schems/Users');
 
 module.exports.getUserByName = async (username) => {
-   return User.findOne({username});
+    return User.findOne({userName: username});
 }
 
 module.exports.getUserById = async (_id) => {
@@ -9,7 +9,6 @@ module.exports.getUserById = async (_id) => {
 }
 
 module.exports.createUser = async (data) => {
-    console.log(data)
     const {username: userName, surName, firstName, middleName, password} = data;
     const newUser = new User({
         userName,

@@ -1,5 +1,7 @@
 const db = require("../db");
 const {serializeUser} = require('../helpers/serialize');
+const token = require('../auth/token');
+
 const registration = async (req, res) => {
     const {userName} = req.body;
     const user = await db.getUserByName(userName);
@@ -19,16 +21,23 @@ const registration = async (req, res) => {
     }
 }
 
-const login = async ({user}, res) => {
-    const tokens = await token.createTokens(user);
+const login = async (req, res) => {
+    console.log(req.user)
+    const tokens = await token.createTokens(req.user);
 
     res.json({
-       ...serializeUser(user),
+        ...serializeUser(req.user),
         ...tokens,
     });
 }
 
+const getProfile = (req, res) => {
+    res.json({
+        ...serializeUser(req.user)
+    })
+}
 module.exports = {
     registration,
     login,
+    getProfile,
 }
