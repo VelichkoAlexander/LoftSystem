@@ -3,7 +3,10 @@ const {bulkSerializeNews} = require('../helpers/serialize');
 
 const getNews = async (req, res) => {
   const news = await db.getNews();
-  res.json(
+  if (!news) {
+    return res.status(200).json([]);
+  }
+  res.status(200).json(
     bulkSerializeNews(news)
   )
 }
@@ -15,11 +18,7 @@ const createNews = async (req, res) => {
       user: req.user,
     };
     await db.createNews(params);
-    const news = await db.getNews();
-    if (!news) {
-      return res.status(200).json([]);
-    }
-    res.status(200).json(bulkSerializeNews(news));
+    return await getNews(req, res);
   } catch (err) {
     res.status(500).json({message: err.message});
   }
@@ -31,8 +30,7 @@ const updateNews = async (req, res) => {
       res.status(404).json({message: 'No present news id'});
     }
     await db.updateNews(req.params.id, req.body);
-    const news = await db.getNews();
-    res.json(bulkSerializeNews(news));
+    return await getNews(req, res);
   } catch (err) {
     res.status(500).json({message: err.message});
   }
@@ -41,8 +39,7 @@ const updateNews = async (req, res) => {
 const removeNews = async (req, res) => {
   try {
     await db.removeNews(req.params.id);
-    const news = await db.getNews();
-    res.json(bulkSerializeNews(news));
+    return await getNews(req, res);
   } catch (err) {
     res.status(500).json({message: err.message});
   }
