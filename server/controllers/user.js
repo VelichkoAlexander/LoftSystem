@@ -71,7 +71,6 @@ const updateUserPermission = async (req, res) => {
 
 const updateUser = async (req, res) => {
   let form = new formidable.IncomingForm();
-  form.uploadDir = path.join(process.cwd(), "public", "images", "upload");
   form.parse(req, async function (err, fields) {
     if (err) {
       next(err);
