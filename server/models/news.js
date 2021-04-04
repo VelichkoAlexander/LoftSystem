@@ -10,7 +10,6 @@ const createNews = async (data) => {
 }
 
 const updateNews = async (id, data) => {
-  console.log(id, data);
   return News.findByIdAndUpdate({ _id: id }, { $set: data });
 }
 

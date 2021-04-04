@@ -28,3 +28,22 @@ module.exports.createUser = async (data) => {
   return await newUser.save();
 }
 
+module.exports.getUsers = async () => {
+  return User.find()
+}
+
+module.exports.removeUser = async (id) => {
+  return User.findByIdAndRemove({ _id: id });
+}
+
+module.exports.updateUserPermission = async (id, data) => {
+  return User.findByIdAndUpdate({ _id: id }, { $set: data });
+}
+module.exports.updateUser = async (id, data) => {
+  return User.findByIdAndUpdate(
+    {_id: id},
+    {$set: data},
+    {new: true},
+  );
+}
+

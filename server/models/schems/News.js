@@ -15,7 +15,7 @@ const newsSchema = new Schema({
       middleName: String,
       surName: String,
       image: String,
-      userName: String,
+      username: String,
     },
   },
   {

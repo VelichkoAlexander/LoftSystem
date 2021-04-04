@@ -65,4 +65,5 @@ const getUserByToken = async (token) => {
 module.exports = {
   createTokens,
   refreshTokens,
+  getUserByToken
 };

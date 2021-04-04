@@ -21,9 +21,11 @@ const serializeNews = (news) => {
 };
 
 const bulkSerializeNews = (news) => news.map((news) => serializeNews(news));
+const bulkSerializeUser = (users) => users.map((user) => serializeUser(user));
 
 module.exports = {
   serializeNews,
   serializeUser,
-  bulkSerializeNews
+  bulkSerializeNews,
+  bulkSerializeUser,
 }
