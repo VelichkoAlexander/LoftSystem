@@ -1,4 +1,4 @@
-module.exports.serializeUser = (user) => {
+const serializeUser = (user) => {
   return {
     id: user.id,
     firstName: user.firstName,
@@ -10,8 +10,7 @@ module.exports.serializeUser = (user) => {
   }
 };
 
-module.exports.serializeNews = (news) => {
-  console.log(news)
+const serializeNews = (news) => {
   return {
     id: news._id,
     title: news.title,
@@ -20,3 +19,11 @@ module.exports.serializeNews = (news) => {
     user: news.user,
   }
 };
+
+const bulkSerializeNews = (news) => news.map((news) => serializeNews(news));
+
+module.exports = {
+  serializeNews,
+  serializeUser,
+  bulkSerializeNews
+}

@@ -5,7 +5,7 @@ const app = express();
 const routes = require('./routes/index')
 const PORT = process.env.PORT || 3000;
 
-require('./db/connect');
+require('./models/connect');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));

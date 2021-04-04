@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {authenticate} = require('../auth/passport');
-const newsController = require('../controller/news');
+const newsController = require('../controllers/news');
 
 router.get('/news', newsController.getNews);
 router.post('/news', authenticate, newsController.createNews);

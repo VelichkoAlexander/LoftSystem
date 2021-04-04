@@ -1,4 +1,4 @@
-const db = require("../db/user");
+const db = require("../models/user");
 const {serializeUser} = require('../helpers/serialize');
 const token = require('../auth/token');
 

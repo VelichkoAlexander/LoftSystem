@@ -1,10 +1,10 @@
-const db = require("../db/news");
-const {serializeNews} = require('../helpers/serialize');
+const db = require("../models/news");
+const {bulkSerializeNews} = require('../helpers/serialize');
 
 const getNews = async (req, res) => {
   const news = await db.getNews();
   res.json(
-    news.map((news) => serializeNews(news))
+    bulkSerializeNews(news)
   )
 }
 
@@ -16,10 +16,10 @@ const createNews = async (req, res) => {
     };
     await db.createNews(params);
     const news = await db.getNews();
-    if (!news.length) {
+    if (!news) {
       return res.status(200).json([]);
     }
-    res.status(200).json(news.map((news) => serializeNews(news)));
+    res.status(200).json(bulkSerializeNews(news));
   } catch (err) {
     res.status(500).json({message: err.message});
   }
@@ -32,7 +32,7 @@ const updateNews = async (req, res) => {
     }
     await db.updateNews(req.params.id, req.body);
     const news = await db.getNews();
-    res.json(news.map((news) => serializeNews(news)));
+    res.json(bulkSerializeNews(news));
   } catch (err) {
     res.status(500).json({message: err.message});
   }
@@ -42,7 +42,7 @@ const removeNews = async (req, res) => {
   try {
     await db.removeNews(req.params.id);
     const news = await db.getNews();
-    res.json(news.map((news) => serializeNews(news)));
+    res.json(bulkSerializeNews(news));
   } catch (err) {
     res.status(500).json({message: err.message});
   }
