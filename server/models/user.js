@@ -4,8 +4,8 @@ module.exports.getUserByName = async (username) => {
   return User.findOne({username});
 }
 
-module.exports.getUserById = async (_id) => {
-  return User.findById({_id});
+module.exports.getUserById = async (id) => {
+  return User.findById({_id: id});
 }
 
 module.exports.createUser = async (data) => {
@@ -33,17 +33,21 @@ module.exports.getUsers = async () => {
 }
 
 module.exports.removeUser = async (id) => {
-  return User.findByIdAndRemove({ _id: id });
+  return User.findByIdAndRemove({_id: id});
 }
 
 module.exports.updateUserPermission = async (id, data) => {
-  return User.findByIdAndUpdate({ _id: id }, { $set: data });
+  return User.findByIdAndUpdate({_id: id}, {$set: data});
 }
 module.exports.updateUser = async (id, data) => {
-  return User.findByIdAndUpdate(
+  const user = await User.findByIdAndUpdate(
     {_id: id},
     {$set: data},
     {new: true},
   );
+  user.setPassword(data.newPassword);
+  user.save();
+  return user;
+
 }
 

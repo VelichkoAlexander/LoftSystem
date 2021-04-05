@@ -1,7 +1,10 @@
 const db = require("../models/user");
 const {serializeUser, bulkSerializeUser} = require('../helpers/serialize');
+const {validation} = require('../helpers/index');
 const token = require('../auth/token');
 const formidable = require('formidable');
+const fs = require('fs');
+const path = require('path');
 
 const registration = async (req, res) => {
   const {username} = req.body;
@@ -69,23 +72,52 @@ const updateUserPermission = async (req, res) => {
   }
 }
 
-const updateUser = async (req, res) => {
+
+const updateUser = async (req, res, next) => {
   let form = new formidable.IncomingForm();
-  form.parse(req, async function (err, fields) {
+  const upload = path.join('./upload');
+
+  if (!fs.existsSync(upload)) {
+    fs.mkdirSync(upload)
+  }
+
+  form.uploadDir = path.join(process.cwd(), upload)
+  form.parse(req, async (err, fields, files) => {
+    console.log(err)
     if (err) {
       next(err);
       return;
     }
+    let user = req.user
+
+    const valid = await validation(user._id, fields, files)
+
+    if (valid.err) {
+      fs.unlinkSync(files.avatar.path)
+      return res.status(500).json({message: valid.message});
+    }
+
+    const fileNameForSave = files.avatar.name.replace(/\s/g, '-')
+    const fileName = path.join(upload, fileNameForSave)
+    fs.rename(files.avatar.path, fileName, function (err) {
+      console.log(err)
+      if (err) {
+        return res.status(500).json({message: err.message});
+      }
+    })
+
+    fields.image = path.join('/upload', fileNameForSave);
+
     try {
-      let user = req.user
       user = await db.updateUser(user.id, fields);
-      res.json({
+      return res.json({
         ...serializeUser(user),
       });
     } catch (err) {
-      res.status(500).json({message: err.message});
+      console.log(err)
+      return res.status(500).json({message: err.message});
     }
-  })
+  });
 }
 
 module.exports = {
