@@ -83,7 +83,6 @@ const updateUser = async (req, res, next) => {
 
   form.uploadDir = path.join(process.cwd(), upload)
   form.parse(req, async (err, fields, files) => {
-    console.log(err)
     if (err) {
       next(err);
       return;
@@ -93,20 +92,24 @@ const updateUser = async (req, res, next) => {
     const valid = await validation(user._id, fields, files)
 
     if (valid.err) {
-      fs.unlinkSync(files.avatar.path)
+      if(files) {
+        fs.unlinkSync(files.avatar.path)
+      }
       return res.status(500).json({message: valid.message});
     }
 
-    const fileNameForSave = files.avatar.name.replace(/\s/g, '-')
-    const fileName = path.join(upload, fileNameForSave)
-    fs.rename(files.avatar.path, fileName, function (err) {
-      console.log(err)
-      if (err) {
-        return res.status(500).json({message: err.message});
-      }
-    })
+    if(files) {
+      const fileNameForSave = files.avatar.name.replace(/\s/g, '-')
+      const fileName = path.join(upload, fileNameForSave)
+      fs.rename(files.avatar.path, fileName, function (err) {
+        console.log(err)
+        if (err) {
+          return res.status(500).json({message: err.message});
+        }
+      })
 
-    fields.image = path.join('/upload', fileNameForSave);
+      fields.image = path.join('/upload', fileNameForSave);
+    }
 
     try {
       user = await db.updateUser(user.id, fields);

@@ -1,9 +1,6 @@
 const db = require('../models/user');
 
-const validation = async (id, fields, files) => {
-  if (files.avatar.name === '' || files.avatar.size === 0) {
-    return {message: 'No Avatar', err: true}
-  }
+const validation = async (id, fields) => {
   if (!fields.newPassword) {
     return {message: 'No new password', err: true}
   }
