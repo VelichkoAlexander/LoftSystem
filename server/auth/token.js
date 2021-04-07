@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const db = require('../models/user');
-const SECRET = 'secret';
+const {SECRET} = process.env;
 
 const createTokens = async (user) => {
   const createToken = await jwt.sign(

@@ -2,11 +2,11 @@ const passport = require('passport');
 const passportJwt = require('passport-jwt');
 const LocalStrategy = require('passport-local').Strategy;
 const {getUserByName, getUserById} = require('../models/user');
-
+const {SECRET} = process.env;
 const JwtStrategy = passportJwt.Strategy;
 
 const params = {
-  secretOrKey: 'secret',
+  secretOrKey: SECRET,
   jwtFromRequest: (req) => {
     let token = null;
 
